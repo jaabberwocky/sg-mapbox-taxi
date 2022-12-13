@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Taxi Visualiser</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #info {
+            display: table;
+            position: relative;
+            margin: 0px auto;
+            word-wrap: anywhere;
+            white-space: pre-wrap;
+            padding: 10px;
+            border: none;
+            border-radius: 3px;
+            font-size: 12px;
+            text-align: center;
+            color: #ff008d;
+            background: #1c1c1c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+    <pre id="info">Loading...<br>[<a href="/about.html">about</a>]</div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamFhYmJlcndvY2t5MTI4IiwiYSI6ImNsYmx6N3NxZjAyaGkzdm52emY3c2J1cDIifQ.6v_L2Nu5dR8Dy8nLovdy9Q';
+
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            // Choose from Mapbox's core styles, or make your own style with Mapbox Studio
+            style: 'mapbox://styles/mapbox/navigation-night-v1', // style URL
+            center: [103.8198, 1.3521], // starting position [lng, lat]
+            zoom: 12 // starting zoom
+        });
+
+        map.on('load', () => {
+            console.log('map loaded...')
+        })
+
+        fetch('https://api.data.gov.sg/v1/transport/taxi-availability')
+            .then((response) => response.json())
+            .then((data) => {
+                const taxiCount = data['features'][0]['properties']['taxi_count'];
+                const timestamp = data['features'][0]['properties']['timestamp'];
+                const taxis = data['features'][0]['geometry']['coordinates'];
+                document.getElementById('info').innerHTML = `<b>Taxis</b>: ${taxiCount} at ${timestamp}`;
+
+                // add taxi coordinates
+                taxis.forEach(element => {
+                    new mapboxgl.Marker(
+                        { color: "#ff008d" }
+                    )
+                        .setLngLat(element)
+                        .addTo(map);
+                });
+            })
+            .then(() => {
+                // add about
+                document.getElementById('info').innerHTML = document.getElementById('info').innerHTML + ' [<a href="/about.html">about</a>]</div>'
+            })
+            .catch(e => console.log(e))
+    </script>
+</body>
+</html>
