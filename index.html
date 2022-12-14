@@ -20,6 +20,10 @@
             width: 100%;
         }
 
+        a {
+            color: #01FFF4;
+        }
+
         #info {
             display: table;
             position: relative;
@@ -58,9 +62,8 @@
                 .then((data) => {
                     const taxiCount = data['features'][0]['properties']['taxi_count'];
                     const timestamp = data['features'][0]['properties']['timestamp'];
-                    const taxis = data['features'][0]['geometry']['coordinates'];
                     const geoJSON = data['features'];
-                    document.getElementById('info').innerHTML = `<b>Taxis</b>: ${taxiCount} at ${timestamp}`;
+                    document.getElementById('info').innerHTML = `<b>Taxis</b>: ${taxiCount} at ${timestamp} <a href="https://github.com/jaabberwocky/sg-mapbox-taxi">[about]</a>`;
 
                     map.addSource('taxis',
                         {
