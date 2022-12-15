@@ -50,10 +50,10 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoiamFhYmJlcndvY2t5MTI4IiwiYSI6ImNsYmx6N3NxZjAyaGkzdm52emY3c2J1cDIifQ.6v_L2Nu5dR8Dy8nLovdy9Q';
 
         const map = new mapboxgl.Map({
-            container: 'map', 
-            style: 'mapbox://styles/mapbox/navigation-night-v1', 
+            container: 'map',
+            style: 'mapbox://styles/mapbox/navigation-night-v1',
             center: [103.8198, 1.3521],
-            zoom: 12 
+            zoom: 12
         });
 
         map.on('load', () => {
@@ -78,9 +78,9 @@
                             'source': 'taxis',
                             'maxzoom': 14,
                             'paint': {
-                                'heatmap-weight': { 
-                                    "type": "identity", 
-                                    "property": "point_count" 
+                                'heatmap-weight': {
+                                    "type": "identity",
+                                    "property": "point_count"
                                 },
                                 'heatmap-intensity': [
                                     'interpolate',
@@ -155,6 +155,30 @@
                     );
 
                 })
+
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
+
+            function success(pos) {
+                const crd = pos.coords;
+                const popup = new mapboxgl.Popup()
+                    .setText(`Your location: ${crd.latitude}, ${crd.longitude}`)
+                    .addTo(map);
+
+                const currentLocationMarker = new mapboxgl.Marker()
+                    .setLngLat([crd.longitude, crd.latitude])
+                    .addTo(map)
+                    .setPopup(popup);
+            }
+
+            function error(err) {
+                console.warn(`ERROR(${err.code}): ${err.message}`);
+            }
+
+            navigator.geolocation.getCurrentPosition(success, error, options);
         })
 
     </script>
