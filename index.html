@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <title>Taxi Visualiser</title>
+    <meta http-equiv="refresh" content="60">
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js"></script>
@@ -56,7 +57,6 @@
         });
 
         map.on('load', () => {
-            console.log('map loaded...');
             fetch('https://api.data.gov.sg/v1/transport/taxi-availability')
                 .then((response) => response.json())
                 .then((data) => {
